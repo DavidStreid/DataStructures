@@ -53,7 +53,11 @@ public class ProbabilisticBagTest{
 			}
 		}
 
-			
-				
+		// Delete - Should see more of the lower weighted objects
+		for(int i = alphabet.size()-1; i>0; i--){
+			pBag.delete(alphabet.get(i));
+			System.out.println(pBag.next());
+		}
+		pBag.delete(alphabet.get(0));				
 	}
 }
