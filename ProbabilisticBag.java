@@ -8,6 +8,8 @@ proportional to their weight.
 	Insertion - O(1)
 	Access - O(1)
 	Deletion - O(N) 
+	
+	REF - http://mishranam.blogspot.com/2015/04/randomized-probabilistic-bag-of-objects.html
 */
 public class ProbabilisticBag {
 	private Random random;
