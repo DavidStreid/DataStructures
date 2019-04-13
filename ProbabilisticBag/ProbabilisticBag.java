@@ -33,15 +33,18 @@ public class ProbabilisticBag {
 		if(map.size()==0){
 			return null;
 		}
-		int value = (int) (random.nextDouble() * total);
+		int value = (int) (random.nextDouble() * total) + 1;
+		// System.out.println(Integer.toString(value) + ": " + Integer.toString(map.ceilingEntry(value).getKey()));
 		return map.ceilingEntry(value).getValue().getObject();
 	}
 	public void delete(Object o){
 		Map.Entry<Integer,WeightedObj> entry;
+		Integer targetKey = null;
 		for(Iterator<Map.Entry<Integer,WeightedObj>> itr = map.entrySet().iterator(); itr.hasNext(); ){
 			entry = itr.next();
 			// Decrement total and adjust weights
 			if(entry.getValue().getObject().equals(o)){
+				targetKey = entry.getKey(); 		// Mark entry for removal
 				int removedWeight = entry.getValue().getWeight();
 				total -= removedWeight;
 
@@ -52,13 +55,8 @@ public class ProbabilisticBag {
 			}
 		}
 		// Remove elemnt
-		for(Iterator<Map.Entry<Integer,WeightedObj>> itr = map.entrySet().iterator(); itr.hasNext(); ){
-                        entry = itr.next();
-                        // Remove entry and decrement total
-                        if(entry.getValue().getObject().equals(o)){
-				itr.remove();
-				break;
-			}	
+		if(targetKey != null){
+			map.remove(targetKey);	
 		}
 	}
 }
