@@ -88,16 +88,13 @@ public class Trie {
 	}
 
 	public boolean contains(String str) {
-		System.out.println(String.format("Searching for %s", str) );
 		TrieNode curr = root;
 		CharacterIterator it = new StringCharacterIterator( str );
 
 		while( curr.has( it.current() ) && it.current() != CharacterIterator.DONE ){
-			System.out.print(it.current() + "\t" );
 			curr = curr.get( it.current() );
 			it.next();	
 		}
-		System.out.println();
 
 		// Check - String fully iterated and at leaf node
 		return ( it.current() == CharacterIterator.DONE && curr.isLeaf() ); 
