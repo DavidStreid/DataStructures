@@ -1,3 +1,26 @@
+# HASH MAP IMPLEMENTATION
+.put(K k, V v)
+.get(K k)
+.containsKey(K k)
+
+## Implementation Notes
+* Internal Data Structure: Array of Entry objects
+* Indexing: Index of an entry is determined by the `Objects.hashcode(Object o)` of the key modulo'd by the total capacity
+* Private "Entry" class: K key, V value, Entry nxt, and `hasKey(K k)`
+
+⋅⋅⋅* `hasKey(K k)` - helper method used when finding mapped node of input key
+
+⋅⋅⋅* `Entry nxt` - On collision, colliding node will be assigned to nxt like a linked list
+
+* Finding Nodes: Uses the input Key to find the index and then traverse the node
+
+⋅⋅⋅* Finding Index: `int idx = Objects.hashCode(k) % capacity`
+
+⋅⋅⋅* Iterate over nodes: `while(curr != null){...curr = curr.nxt...}`
+
+* Resizing: Use a load factor & capacity. Keep track of size and resize when size/capacity exceeds loadFactor
+
+## Testing Output
 ```
 $ javac HashMapTest.java && java -ea HashMapTest
 Note: Some input files use unchecked or unsafe operations.
