@@ -14,11 +14,15 @@
 
 * Finding Nodes: Uses the input Key to find the index and then traverse the node
 
-    * Finding Index: `int idx = Objects.hashCode(k) % capacity`
+    * Finding Index: Find index using the indexing method
 
-    * Iterate over nodes: `while(curr != null){...curr = curr.nxt...}`
+    * Iterate over nodes at Index: `while(curr != null){...curr = curr.nxt...}`
 
-* Resizing: Use a load factor & capacity. Keep track of size and resize when size/capacity exceeds loadFactor
+* Resizing: Use a load factor & capacity
+
+    * Keep track of size on each .put()/.remove()
+
+    * Resize when size/capacity exceeds loadFactor
 
 ## Testing Output
 ```
