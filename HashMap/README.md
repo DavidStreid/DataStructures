@@ -5,7 +5,7 @@
 
 ## Implementation Notes
 * Internal Data Structure: Array of Entry objects
-* Indexing: Index of an entry is determined by the `Objects.hashcode(Object o)` of the key modulo'd by the total capacity
+* Indexing: `int idx = Objects.hashCode(k) % capacity`
 * Private "Entry" class: K key, V value, Entry nxt, and `hasKey(K k)`
 
     * `hasKey(K k)` - helper method used when finding mapped node of input key
