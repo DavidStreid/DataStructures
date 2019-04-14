@@ -1,6 +1,8 @@
 # HASH MAP IMPLEMENTATION
 .put(K k, V v)
+
 .get(K k)
+
 .containsKey(K k)
 
 ## Implementation Notes
