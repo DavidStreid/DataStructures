@@ -3,6 +3,8 @@
 
 .get(K k)
 
+.remove(K k)
+
 .containsKey(K k)
 
 ## Implementation Notes
