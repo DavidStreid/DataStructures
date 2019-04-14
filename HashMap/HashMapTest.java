@@ -85,7 +85,13 @@ public class HashMapTest {
                 indexOfResize = (int) (lf*capacity)-1;
 
                 log(String.format("\t(Capacity: %d)", map.getCapacity()));
-                log(String.format(" - New Capacity (%d) & will resize on index %d", capacity, indexOfResize));
+
+                String e = String.format("index %s", Integer.toString(indexOfResize));
+                if( indexOfResize <= strings.length ){
+                    e = String.format("\"%s\"", strings[indexOfResize]);
+                }
+
+                log(String.format(" - New Capacity (%d) & will resize on %s", capacity, e));
 
                 assert map.getCapacity() == capacity;
             }
