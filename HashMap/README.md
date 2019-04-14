@@ -8,15 +8,15 @@
 * Indexing: Index of an entry is determined by the `Objects.hashcode(Object o)` of the key modulo'd by the total capacity
 * Private "Entry" class: K key, V value, Entry nxt, and `hasKey(K k)`
 
-⋅⋅⋅ * `hasKey(K k)` - helper method used when finding mapped node of input key
+    * `hasKey(K k)` - helper method used when finding mapped node of input key
 
-⋅⋅⋅ * `Entry nxt` - On collision, colliding node will be assigned to nxt like a linked list
+    * `Entry nxt` - On collision, colliding node will be assigned to nxt like a linked list
 
 * Finding Nodes: Uses the input Key to find the index and then traverse the node
 
-⋅⋅⋅ * Finding Index: `int idx = Objects.hashCode(k) % capacity`
+    * Finding Index: `int idx = Objects.hashCode(k) % capacity`
 
-⋅⋅⋅ * Iterate over nodes: `while(curr != null){...curr = curr.nxt...}`
+    * Iterate over nodes: `while(curr != null){...curr = curr.nxt...}`
 
 * Resizing: Use a load factor & capacity. Keep track of size and resize when size/capacity exceeds loadFactor
 
