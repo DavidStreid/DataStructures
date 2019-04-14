@@ -1,69 +1,92 @@
 import java.util.*;
 
 public class HashMap <K,V> {
-
-    // TODO - handle null case
-    // TODO - handle loadFactor
+    static final private int defaultInitialCapacity = 16;
+    static final private float defaultLoadFactor = 0.75f;
 
     private float loadFactor;
-    private Node<K,V>[] buckets;
-
-    static final private int defaultInitialSize = 16;
-    static final private float defaultLoadFactor = 0.75f;
+    private Entry<K,V>[] buckets;
     private int size;
+    private int capacity;
 
-    private class Node <K,V> {
+    private class Entry <K,V> {
         K key;
         V value;
+        Entry nxt;
 
-        // Only populated on collissions
-        Node nxt;
-
-        Node( K k, V v ){
+        Entry( K k, V v ){
             this.key = k;
             this.value = v;
         }
 
-        @Override
-        public final boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (Node.class.isInstance(o)) {
-                final Node n = (Node)o;
-                if (Objects.equals(n.key, key) &&
-                    Objects.equals(n.value, value))
-                    return true;
+        /**
+         * Checks equality of input key w/ entry's key
+         */
+        boolean hasKey( K k ){
+            if( key == null ){
+                // For when a null key is mapped
+                return (k == null);
             }
-            return false;
+            return key.equals(k);
         }
     }
 
-    // CONSTRUCTORS
+    /**
+     * CONSTRUCTORS
+     */
     public HashMap(){
-        this(defaultInitialSize, defaultLoadFactor);
+        this(defaultInitialCapacity, defaultLoadFactor);
     }
     public HashMap(float loadFactor){
-        this(defaultInitialSize, loadFactor);
+        this(defaultInitialCapacity, loadFactor);
     }
-    public HashMap(int initialSize){
-        this(initialSize, defaultLoadFactor);
+    public HashMap(int initialCapacity){
+        this(initialCapacity, defaultLoadFactor);
     }
-    public HashMap(int initialSize, float loadFactor){
-        this.buckets = new Node[initialSize];
+    public HashMap(int initialCapacity, float loadFactor){
+        this.buckets = new Entry[initialCapacity];
         this.loadFactor = loadFactor;
-        this.size = initialSize;
+        this.capacity = initialCapacity;
+        this.size = 0;
     }
 
+    /**
+     * Gets index of Entry
+     */
     private int getIndex(K k) {
-        int idx = Objects.hashCode(k) % size;
+        int idx = Objects.hashCode(k) % capacity;
         return idx;
     }
 
+    /**
+     * Increments size of hashMap
+     */
+    private void incrementSize() {
+        size++;
+        float currLoad = size/(float) capacity;
+        if( currLoad >= defaultLoadFactor ){
+            Entry<K,V>[] oldBuckets = Arrays.copyOf(buckets, buckets.length);
+            capacity = capacity *2;
+            size = 0;
+            buckets = new Entry[capacity];
+            for( Entry<K,V> n : oldBuckets ){
+                while( n != null ){
+                    put( n.key, n.value );
+                    n = n.nxt;
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Returns whether the map contains the input key
+     */
     public boolean containsKey(K k){
         int idx = getIndex(k);
-        Node curr = buckets[idx];
+        Entry curr = buckets[idx];
         while( curr != null ){
-            if( curr.key.equals(k) ){
+            if( curr.hasKey(k) ){
                 return true;
             }
             curr = curr.nxt;
@@ -71,19 +94,23 @@ public class HashMap <K,V> {
         return false;
     }
 
+    /**
+     * Maps a value to an input key
+     */
     public void put(K k, V v){
         // increment size, length of bucket won't be size when collissions occur
         int idx = getIndex(k);
-        Node curr = buckets[idx];
+        Entry curr = buckets[idx];
 
         if(curr == null){
             // No collission - create new entry
-            buckets[idx] = new Node(k,v);
+            buckets[idx] = new Entry(k,v);
+            incrementSize();
             return;
         } else {
             // collission - traverse linked list
             while(curr != null){
-                if( curr.key.equals(k) ){
+                if( curr.hasKey(k) ){
                     // key is mapped - overwrite
                     curr.value = v;
                     return;
@@ -91,10 +118,10 @@ public class HashMap <K,V> {
                 if( curr.nxt != null ){
                     curr = curr.nxt;
                 } else {
-                    // Mapping for k does not exist - create new Node & increment size
-                    Node n = new Node(k, v);
+                    // Mapping for k does not exist - create new Entry & increment size
+                    Entry n = new Entry(k, v);
                     curr.nxt = n;
-                    size++;
+                    incrementSize();
                     return;
                 }
             }
@@ -103,11 +130,14 @@ public class HashMap <K,V> {
         return;
     }
 
+    /**
+     * Returns the value mapped to by an input key. Returns null if no value is mapped
+     */
     public V get(K k){
         int idx = getIndex(k);
-        Node curr = buckets[idx];
+        Entry curr = buckets[idx];
         while( curr != null ){
-            if( curr.key.equals(k) ){
+            if( curr.hasKey(k) ){
                 return (V) curr.value;
             }
             curr = curr.nxt;
@@ -115,35 +145,48 @@ public class HashMap <K,V> {
         return null;
     }
 
+    /**
+     * Removes and returns the value mapped by an input key. Retruns null if no value is mapped
+     */
     public V remove(K k) {
-        // decrement size, length of bucket won't be size when collissions occur
         int idx = getIndex(k);
-        Node n1 = buckets[idx];
+        Entry e1 = buckets[idx];
 
-        if( n1 == null ){
+        if( e1 == null ){
             // No elment to remove
             return null;
         }
 
-        if( n1.key.equals(k) ){
-            buckets[idx] = n1.nxt;
+        if( e1.hasKey(k) ){
+            buckets[idx] = e1.nxt;
             size--;
-            return (V) n1.value;
+            return (V) e1.value;
         }
 
-        Node n2 = n1.nxt;
-        while( n2 != null ){
-            if( n2.key.equals(k) ){
-                n1.nxt = n2.nxt;
+        // Iterate over entries mapped to bucket
+        Entry e2 = e1.nxt;
+        while( e2 != null ){
+            if( e2.hasKey(k) ){
+                e1.nxt = e2.nxt;
                 size--;
-                return (V) n2.value;
+                return (V) e2.value;
             } else {
-                n1 = n2;
-                n2 = n2.nxt;
+                e1 = e2;
+                e2 = e2.nxt;
             }
         }
 
         // No element to return
         return null;
+    }
+
+    /**
+     * USED ONLY FOR TESTING
+     */
+    public int getCapacity(){
+        return capacity;
+    }
+    public int getSize(){
+        return size;
     }
 }
