@@ -1,6 +1,7 @@
 # Structure Data Structure
 
 ## Overview
+```
 Struct = {
 	'k1': {
 		'k2': {
@@ -10,9 +11,12 @@ Struct = {
 		'k3': 'Hello World' 
 	}
 }
+```
 
 Operations
+	
 	get(path) - Returns the val at the path in the structure. If it doesn't exist, return null
+	
 	set(path, val) - Sets val at path in datastructure. If path doesn't exist, creates it.
 
 
