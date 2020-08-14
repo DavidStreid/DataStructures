@@ -1,3 +1,34 @@
+# Probabilistic Bag
+## Description
+Part 1)
+Design a data structure w/ two methods
+```
+.put( obj ), return void - Puts obj into data structure where obj is { val: any, weight: int } where weight is [0, infinity)
+.get( ), return val (any) - Retrieves random val (from one of the obj), with probability = obj.weight/(Sum of all object weights in data structure)
+```
+
+Part 2)
+With that same data structure, write a remove method
+```
+.remove(), return val (any) - retrieves random val (from one of the obj), with probability = obj.weight/(Sum of all object weights in data structure) and then subtracts that weight from the total weight
+```
+E.g.
+Part 1
+```
+bag = ProbabilisticBag()
+bag.put( { v: 'A', w: 5 } )
+bag.put( { v: 'B', w: 2 } )
+bag.put( { v: 'C', w: 3 } )
+bag.get()  // Should return B 20%, C 30%, A, 50%
+```
+
+Part 2
+```
+bag.remove() // Returns random, let's say "A"
+bag.get() // Should return B 40% & C 60%
+```
+
+## Run
 ```
 $ javac ProbabilisticBagTest.java && java ProbabilisticBagTest
 Testing Observed Frequencies - Count: 100000
@@ -16,3 +47,6 @@ Testing Observed Frequencies - Count: 100000
 DELETING - Should see more lower-weighted objects (beginning of alphabet)
         B->J->F->C->D->E->E->B->A->A->A->null
 ```
+
+## Reference
+* http://mishranam.blogspot.com/2015/04/randomized-probabilistic-bag-of-objects.html
